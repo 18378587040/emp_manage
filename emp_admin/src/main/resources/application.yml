@@ -2,21 +2,21 @@ server:
   port: 8081
 spring:
   # 邮件配置
-#  mail:
-#    # 邮件服务器地址
-#    host: smtp.qq.com
-#    # 协议
-#    protocol: smtp
-#    # 编码格式
-#    default-encoding: utf-8
-#    # 授权码（在邮箱开通服务时获取）
-#    password: avdcovyhrgbmbejh
-#    # 发送者邮箱地址
-#    username: 1060968795@qq.com
-#    # 端口（不同邮箱端口号不同）
-#    port: 465
-#    #使用了465 SSL 端口，但是不设置ssl，则导致该错误
-#    properties.mail.smtp.ssl.enable: true
+  #  mail:
+  #    # 邮件服务器地址
+  #    host: smtp.qq.com
+  #    # 协议
+  #    protocol: smtp
+  #    # 编码格式
+  #    default-encoding: utf-8
+  #    # 授权码（在邮箱开通服务时获取）
+  #    password: avdcovyhrgbmbejh
+  #    # 发送者邮箱地址
+  #    username: 1060968795@qq.com
+  #    # 端口（不同邮箱端口号不同）
+  #    port: 465
+  #    #使用了465 SSL 端口，但是不设置ssl，则导致该错误
+  #    properties.mail.smtp.ssl.enable: true
 
   # rabbitmq配置
   #  rabbitmq:
@@ -58,8 +58,8 @@ spring:
   #        #最小空闲连接
   #        min-idle: 5
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/emb_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/emp_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: 946825
     hikari:
