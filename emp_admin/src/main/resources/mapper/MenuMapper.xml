@@ -17,9 +17,34 @@
         <result column="is_hidden" property="isHidden" />
     </resultMap>
 
+    <!-- 根据角色获取菜单列表 -->
+    <resultMap id="MenusWithRole" type="com.zgm.server.pojo.Menu" extends="BaseResultMap">
+        <collection property="roles" ofType="com.zgm.server.pojo.Role">
+            <id column="rid" property="id" />
+            <result column="rname" property="roleName" />
+            <result column="rnameZh" property="roleLabel"/>
+        </collection>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, url, name, path, component, icon, create_time, update_time, order_num, parent_id, is_hidden
     </sql>
+    <select id="getMenusWithRole" resultMap="MenusWithRole">
+         SELECT
+            m.*,
+            r.id AS rid,
+            r.`role_name` AS rname,
+            r.role_label AS rnameZh
+        FROM
+            t_menu m,
+            t_menu_role mr,
+            t_role r
+        WHERE
+            m.id = mr.menu_id
+            AND r.id = mr.role_id
+        ORDER BY
+            m.id
+    </select>
 
 </mapper>

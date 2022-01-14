@@ -1,10 +1,8 @@
 package com.zgm.server.pojo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import java.util.Collection;
 import static com.zgm.server.constant.CommonConst.FALSE;
@@ -64,11 +62,11 @@ public class User implements Serializable, UserDetails {
     private Integer isDisable;
 
     @ApiModelProperty(value = "创建时间")
-    @TableField("create_time")
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "更新时间")
-    @TableField("update_time")
+    @TableField(value = "update_time", fill = FieldFill.INSERT)
     private LocalDateTime updateTime;
 
 

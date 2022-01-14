@@ -33,7 +33,7 @@ public class CustomFilter implements FilterInvocationSecurityMetadataSource {
         for (Menu menu : menus) {
             // 判断请求url与菜单角色是否匹配
             if (new AntPathMatcher().match(menu.getUrl(), requestUrl)) {
-                String[] str = menu.getRoles().stream().map(Role::getName).toArray(String[]::new);
+                String[] str = menu.getRoles().stream().map(Role::getRoleName).toArray(String[]::new);
                 return SecurityConfig.createList(str);
             }
         }
