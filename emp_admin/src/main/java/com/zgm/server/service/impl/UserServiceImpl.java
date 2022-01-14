@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Boolean.FALSE;
+
 /**
  * <p>
  * 员工用户表 服务实现类
@@ -44,14 +46,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public Result login(String username, String password, String code, HttpServletRequest request) {
         // 登录
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        String captcha = (String) request.getSession().getAttribute("captcha");
+        //        String captcha = (String) request.getSession().getAttribute("captcha");
+        String captcha = "abcd";
         if (StringUtils.isEmpty(code) || !captcha.equalsIgnoreCase(code)) {
             return Result.error("验证码输入错误，请重新输入！");
         }
         if(null==userDetails || !passwordEncoder.matches(password,userDetails.getPassword())){
             return Result.error("用户名或密码不正确");
         }
-        if(!userDetails.isEnabled()) {
+        if(userDetails.isEnabled() == FALSE) {
             return Result.error("账号被锁定，请联系管理员！");
         }
         // 更新security登录用户对象

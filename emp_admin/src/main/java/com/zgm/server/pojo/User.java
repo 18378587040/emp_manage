@@ -5,13 +5,15 @@ import com.baomidou.mybatisplus.annotation.*;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import java.util.Collection;
-import static com.zgm.server.constant.CommonConst.FALSE;
+import java.util.List;
+import java.util.stream.Collectors;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -69,10 +71,21 @@ public class User implements Serializable, UserDetails {
     @TableField(value = "update_time", fill = FieldFill.INSERT)
     private LocalDateTime updateTime;
 
+    @ApiModelProperty(value = "角色权限")
+    @TableField(exist = false)
+    private List<Role> roles;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<Role> roles = this.roles;
+        // 拿到权限列表
+        List<SimpleGrantedAuthority> authorities = this.roles
+                .stream()
+                // 拿到权限的名字
+                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
+                .collect(Collectors.toList());
+        return authorities;
     }
 
     @Override
@@ -82,7 +95,7 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.isDisable == FALSE;
+        return true;
     }
 
     @Override

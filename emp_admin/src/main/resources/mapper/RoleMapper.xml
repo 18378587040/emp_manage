@@ -16,5 +16,16 @@
     <sql id="Base_Column_List">
         id, role_name, role_label, is_disable, create_time, update_time
     </sql>
+    <!-- 根据用户id查询角色 -->
+    <select id="listRolesByUserId" resultType="com.zgm.server.pojo.Role">
+        SELECT
+         r.role_name as roleName
+        FROM
+         t_role r,
+         t_user_role ur
+        WHERE
+         r.id = ur.role_id
+        AND ur.user_id = #{id}
+    </select>
 
 </mapper>

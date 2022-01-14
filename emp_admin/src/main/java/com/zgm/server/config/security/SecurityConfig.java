@@ -1,7 +1,6 @@
 package com.zgm.server.config.security;
 
 import com.zgm.server.config.security.handler.*;
-import com.zgm.server.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -88,20 +87,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(restfulAccessDeniedHandler)
                 .authenticationEntryPoint(restAuthorizationEntryPoint);
     }
-
-//    @Override
-//    @Bean
-//    protected UserDetailsService userDetailsService() {
-//        return username -> {
-//            Admin admin = adminService.getAdminByUserName(username);
-//            if (null!=admin) {
-//                // 设置用户权限列表
-//                admin.setRoles(adminService.getRoles(admin.getId()));
-//                return admin;
-//            }
-//            return null;
-//        };
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

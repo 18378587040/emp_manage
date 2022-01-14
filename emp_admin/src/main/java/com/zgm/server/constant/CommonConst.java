@@ -51,25 +51,4 @@ public class CommonConst {
      */
     public static final String DEFAULT_AVATAR = "https://www.static.talkxj.com/avatar/user.png";
 
-    /**
-     * 浏览文章集合
-     */
-    public static String ARTICLE_SET = "articleSet";
-
-    /**
-     * 前端组件名
-     */
-    public static String COMPONENT = "Layout";
-
-    /**
-     * 文章页面路径
-     */
-    public static final String ARTICLE_PATH = "/articles/";
-
-
-    /**
-     * 友联页面路径
-     */
-    public static final String LINK_PATH = "/links";
-
 }
