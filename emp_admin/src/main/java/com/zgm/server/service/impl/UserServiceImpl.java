@@ -54,7 +54,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(null==userDetails || !passwordEncoder.matches(password,userDetails.getPassword())){
             return Result.error("用户名或密码不正确");
         }
-        if(userDetails.isEnabled() == FALSE) {
+        if(!userDetails.isEnabled()) {
             return Result.error("账号被锁定，请联系管理员！");
         }
         // 更新security登录用户对象

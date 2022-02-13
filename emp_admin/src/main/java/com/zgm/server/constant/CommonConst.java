@@ -17,6 +17,11 @@ public class CommonConst {
     public static final int TRUE = 1;
 
     /**
+     * 前端组件名
+     */
+    public static String COMPONENT = "Layout";
+
+    /**
      * 高亮标签
      */
     public static final String PRE_TAG = "<span style='color:#f47466'>";

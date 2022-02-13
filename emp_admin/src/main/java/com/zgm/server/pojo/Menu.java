@@ -8,6 +8,7 @@ import java.util.List;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -58,7 +59,7 @@ public class Menu implements Serializable {
 
     @ApiModelProperty(value = "排序")
     @TableField("order_num")
-    private Boolean orderNum;
+    private Integer orderNum;
 
     @ApiModelProperty(value = "父id")
     @TableField("parent_id")
@@ -66,11 +67,15 @@ public class Menu implements Serializable {
 
     @ApiModelProperty(value = "是否隐藏 0否1是")
     @TableField("is_hidden")
-    private Boolean isHidden;
+    private Integer isHidden;
 
     @ApiModelProperty(value = "角色列表")
     @TableField(exist = false)
     private List<Role> roles;
+
+    @ApiModelProperty(value = "子菜单")
+    @TableField(exist = false)
+    private List<Menu> children;
 
 
 }

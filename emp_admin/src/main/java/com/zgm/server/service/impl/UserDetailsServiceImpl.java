@@ -38,9 +38,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         .eq(User::getUsername, username));
         // 查询账号角色
         List<Role> roleList = roleMapper.listRolesByUserId(user.getId());
-        for (Role role : roleList) {
-            System.out.println(role.getRoleName());
-        }
         user.setRoles(roleList);
         if (Objects.isNull(user)) {
             throw new BizException("用户名不存在");

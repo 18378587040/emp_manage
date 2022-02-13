@@ -9,12 +9,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import static com.zgm.server.constant.CommonConst.FALSE;
 
 /**
  * <p>
@@ -61,7 +65,8 @@ public class User implements Serializable, UserDetails {
 
     @ApiModelProperty(value = "是否启用")
     @TableField("is_disable")
-    private Integer isDisable;
+    @Getter(AccessLevel.NONE)
+    private boolean isDisable;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)

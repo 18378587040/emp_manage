@@ -21,4 +21,10 @@ public interface MenuMapper extends BaseMapper<Menu> {
      */
     List<Menu> getMenusWithRole();
 
+    /**
+     * 根据用户id查询菜单
+     * @param id
+     * @return 菜单列表
+     */
+    List<Menu> listMenusByUserInfoId(Integer id);
 }

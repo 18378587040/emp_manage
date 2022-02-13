@@ -31,7 +31,7 @@
         id, url, name, path, component, icon, create_time, update_time, order_num, parent_id, is_hidden
     </sql>
     <select id="getMenusWithRole" resultMap="MenusWithRole">
-         SELECT
+        SELECT
             m.*,
             r.id AS rid,
             r.`role_name` AS rname,
@@ -45,6 +45,23 @@
             AND r.id = mr.role_id
         ORDER BY
             m.id
+    </select>
+    <select id="listMenusByUserInfoId" resultType="com.zgm.server.pojo.Menu">
+        SELECT DISTINCT
+            m.id,
+            `name`,
+            `path`,
+            component,
+            icon,
+            is_hidden AS isHidden,
+            parent_id AS parentId,
+            order_num AS orderNum
+         FROM
+            t_user_role ur
+            JOIN t_menu_role rm ON ur.role_id = rm.role_id
+            JOIN `t_menu` m ON rm.menu_id = m.id
+         WHERE
+            user_id = #{id}
     </select>
 
 </mapper>
