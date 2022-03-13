@@ -4,6 +4,7 @@ import com.zgm.server.dto.LabelOptionDTO;
 import com.zgm.server.dto.UserMenuDTO;
 import com.zgm.server.pojo.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zgm.server.vo.MenuVO;
 
 import java.util.List;
 
@@ -43,4 +44,15 @@ public interface IMenuService extends IService<Menu> {
      */
     List<UserMenuDTO> listUserMenus();
 
+    /**
+     * 新增或修改菜单
+     * @param menuVO
+     */
+    void saveOrUpdateMenu(MenuVO menuVO);
+
+    /**
+     * 删除菜单
+     * @param menuId
+     */
+    void deleteMenu(Integer menuId);
 }

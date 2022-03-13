@@ -6,8 +6,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -21,6 +20,9 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("t_role")
 @ApiModel(value="Role对象", description="角色表")
 public class Role implements Serializable {
@@ -41,7 +43,7 @@ public class Role implements Serializable {
 
     @ApiModelProperty(value = "是否禁用  0否 1是")
     @TableField("is_disable")
-    private Boolean isDisable;
+    private Integer isDisable;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)

@@ -49,7 +49,7 @@ public class GeneratorMain {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "/src/main/aa");
+        gc.setOutputDir(projectPath + "/src/main/java");
         //作者
         gc.setAuthor("ming");
         //打开输出目录

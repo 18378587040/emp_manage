@@ -33,7 +33,7 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Cloud easy implement document")
+                .title("员工事务管理")
                 .description("员工事务管理接口文档")
                 .contact(new Contact("ming","http:localhost:8081/doc.html", "1060968795@qq.com"))
                 .version("1.0")

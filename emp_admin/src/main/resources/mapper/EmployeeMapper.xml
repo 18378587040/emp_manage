@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zgm.server.mapper.EmployeeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zgm.server.pojo.Employee">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="work_id" property="workId" />
+        <result column="gender" property="gender" />
+        <result column="age" property="age" />
+        <result column="email" property="email" />
+        <result column="adress" property="adress" />
+        <result column="phone" property="phone" />
+        <result column="depart_id" property="departId" />
+        <result column="position_id" property="positionId" />
+        <result column="jobtitle_id" property="jobtitleId" />
+        <result column="salary_id" property="salaryId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, work_id, gender, age, email, adress, phone, depart_id, position_id, jobtitle_id, salary_id, create_time, update_time
+    </sql>
+
+    <resultMap id="EmployeeInfo" type="com.zgm.server.pojo.Employee" extends="BaseResultMap">
+        <association property="depart" javaType="com.zgm.server.pojo.Depart">
+            <id column="did" property="id"/>
+            <result column="dname" property="name"/>
+        </association>
+        <association property="position" javaType="com.zgm.server.pojo.Position">
+            <id column="pid" property="id"/>
+            <result column="pname" property="name"/>
+        </association>
+        <association property="jobtitle" javaType="com.zgm.server.pojo.Jobtitle">
+            <id column="jid" property="id"/>
+            <result column="jname" property="name"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="EmployeeSalary" type="com.zgm.server.pojo.Employee" extends="BaseResultMap">
+        <association property="salary" javaType="com.zgm.server.pojo.Salary">
+            <id column="sid" property="id" />
+            <result column="sname" property="name" />
+            <result column="sbasicSalary" property="basicSalary" />
+            <result column="sbonus" property="bonus" />
+            <result column="slunchSalary" property="lunchSalary" />
+            <result column="strafficSalary" property="trafficSalary" />
+            <result column="sallSalary" property="allSalary" />
+            <result column="spensionBase" property="pensionBase" />
+            <result column="spensionPer" property="pensionPer" />
+            <result column="smedicalBase" property="medicalBase" />
+            <result column="smedicalPer" property="medicalPer" />
+            <result column="saccumulationFundBase" property="accumulationFundBase" />
+            <result column="saccumulationFundPer" property="accumulationFundPer" />
+        </association>
+        <association property="depart" javaType="com.zgm.server.pojo.Depart">
+            <result column="dname" property="name" />
+        </association>
+    </resultMap>
+
+
+    <select id="listEmployeeSalary" resultMap="EmployeeSalary">
+         SELECT
+        e.*,
+        d.`name` AS dname,
+        s.id AS sid,
+        s.`name` AS sname,
+        s.basic_salary AS sbasicSalary,
+        s.bonus AS sbonus,
+        s.lunch_salary AS slunchSalary,
+        s.traffic_salary AS strafficSalary,
+        s.all_salary AS sallSalary,
+        s.pension_base AS spensionBase,
+        s.pension_per AS spensionPer,
+        s.medical_base AS smedicalBase,
+        s.medical_per AS smedicalPer,
+        s.accumulation_fund_base AS saccumulationFundBase,
+        s.accumulation_fund_per AS saccumulationFundPer
+		FROM
+        t_employee e
+        LEFT JOIN t_salary s ON e.salary_id = s.id
+        LEFT JOIN t_depart d ON e.depart_id = d.id
+        <where>
+            <if test="conditionVO.keywords != null">
+                name like concat('%',#{conditionVO.keywords},'%')
+            </if>
+        </where>
+        LIMIT #{current}, #{size}
+    </select>
+    <!-- 查询员工基本资料 -->
+    <select id="listEmployees" resultMap="EmployeeInfo">
+        SELECT
+        e.*,
+        p.id as pid,
+        p.name as pname,
+        j.id as jid,
+        j.name as jname,
+        d.id as did,
+        d.name as dname
+        FROM
+        t_employee e,
+        t_position p,
+        t_jobtitle j,
+        t_depart d
+        WHERE
+        e.position_id = p.id
+        AND e.jobtitle_id = j.id
+        AND e.depart_id = d.id
+        <if test="conditionVO.keywords != null">
+        AND e.name like concat('%',#{conditionVO.keywords},'%')
+        </if>
+        LIMIT #{current}, #{size}
+    </select>
+    <select id="getEmployee" resultMap="EmployeeInfo">
+        SELECT
+        e.*,
+        p.id as pid,
+        p.name as pname,
+        j.id as jid,
+        j.name as jname,
+        d.id as did,
+        d.name as dname
+        FROM
+        t_employee e,
+        t_position p,
+        t_jobtitle j,
+        t_depart d
+        WHERE
+        e.position_id = p.id
+        AND e.jobtitle_id = j.id
+        AND e.depart_id = d.id
+        <if test="null!=id">
+            AND e.id = #{id}
+        </if>
+    </select>
+
+</mapper>

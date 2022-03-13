@@ -4,14 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.zgm.server.dto.LabelOptionDTO;
 import com.zgm.server.dto.UserMenuDTO;
+import com.zgm.server.exception.BizException;
+import com.zgm.server.mapper.MenuRoleMapper;
 import com.zgm.server.pojo.Menu;
 import com.zgm.server.mapper.MenuMapper;
+import com.zgm.server.pojo.MenuRole;
 import com.zgm.server.service.IMenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zgm.server.utils.BeanCopyUtils;
 import com.zgm.server.utils.UserUtils;
+import com.zgm.server.vo.MenuVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,6 +37,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Autowired
     private MenuMapper menuMapper;
+    @Autowired
+    private MenuRoleMapper menuRoleMapper;
 
     @Override
     public List<Menu> getMenusWithRole() {
@@ -99,6 +106,32 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         Map<Integer, List<Menu>> childrenMap = getMenuMap(menuList);
         // 转换前端菜单格式
         return convertUserMenuList(catalogList, childrenMap);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void saveOrUpdateMenu(MenuVO menuVO) {
+        Menu menu = BeanCopyUtils.copyObject(menuVO, Menu.class);
+        this.saveOrUpdate(menu);
+    }
+
+    @Override
+    public void deleteMenu(Integer menuId) {
+        // 查询是否有角色关联
+        Integer count = menuRoleMapper.selectCount(new LambdaQueryWrapper<MenuRole>()
+                .eq(MenuRole::getMenuId, menuId));
+        if (count > 0) {
+            throw new BizException("菜单下有角色关联");
+        }
+        // 查询子菜单
+        List<Integer> menuIdList = menuMapper.selectList(new LambdaQueryWrapper<Menu>()
+                .select(Menu::getId)
+                .eq(Menu::getParentId, menuId))
+                .stream()
+                .map(Menu::getId)
+                .collect(Collectors.toList());
+        menuIdList.add(menuId);
+        menuMapper.deleteBatchIds(menuIdList);
     }
 
     /**

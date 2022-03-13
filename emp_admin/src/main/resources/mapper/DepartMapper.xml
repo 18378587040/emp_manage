@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zgm.server.mapper.DepartMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zgm.server.pojo.Depart">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="parent_id" property="parentId" />
+        <result column="dep_path" property="depPath" />
+        <result column="is_enabled" property="isEnabled" />
+        <result column="is_parent" property="isParent" />
+<!--        <result column="create_time" property="createTime" />-->
+<!--        <result column="update_time" property="updateTime" />-->
+    </resultMap>
+
+    <resultMap id="DepartmentWithChildren" type="com.zgm.server.pojo.Depart" extends="BaseResultMap">
+        <collection property="children" ofType="com.zgm.server.pojo.Depart"
+                    select="com.zgm.server.mapper.DepartMapper.listDeparts" column="id">
+        </collection>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, parent_id, dep_path, is_enabled, is_parent
+    </sql>
+    <!-- 删除部门 -->
+    <select id="deleteDep" statementType="CALLABLE">
+        call deleteDep(
+            #{id,mode=IN,jdbcType=INTEGER},
+            #{result,mode=OUT,jdbcType=INTEGER}
+        )
+    </select>
+    <!-- 添加部门 -->
+    <select id="addDep" statementType="CALLABLE">
+        call addDep(
+        #{name,mode=IN,jdbcType=VARCHAR},
+        #{parentId,mode=IN,jdbcType=INTEGER},
+        #{isEnabled,mode=IN,jdbcType=INTEGER},
+        #{result,mode=OUT,jdbcType=INTEGER},
+        #{id,mode=OUT,jdbcType=INTEGER})
+    </select>
+
+    <!--获取所有部门-->
+    <select id="listDeparts" resultMap="DepartmentWithChildren">
+        select
+        <include refid="Base_Column_List"/>
+        from t_depart
+        where parent_id = #{parentId}
+    </select>
+
+</mapper>

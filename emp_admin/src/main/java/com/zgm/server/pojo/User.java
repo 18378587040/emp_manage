@@ -9,10 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,6 +26,8 @@ import static com.zgm.server.constant.CommonConst.FALSE;
  * @since 2022-01-11
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("t_user")
@@ -78,19 +77,22 @@ public class User implements Serializable, UserDetails {
 
     @ApiModelProperty(value = "角色权限")
     @TableField(exist = false)
-    private List<Role> roles;
+    private List<String> roles;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<Role> roles = this.roles;
-        // 拿到权限列表
-        List<SimpleGrantedAuthority> authorities = this.roles
-                .stream()
-                // 拿到权限的名字
-                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
-                .collect(Collectors.toList());
-        return authorities;
+//        List<Role> roles = this.roles;
+//        // 拿到权限列表
+//        List<SimpleGrantedAuthority> authorities = this.roles
+//                .stream()
+//                // 拿到权限的名字
+//                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
+//                .collect(Collectors.toList());
+//        return authorities;
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 
     @Override

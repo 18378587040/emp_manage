@@ -1,7 +1,11 @@
 package com.zgm.server.mapper;
 
+import com.zgm.server.dto.ResourceRoleDTO;
+import com.zgm.server.dto.RoleDTO;
 import com.zgm.server.pojo.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zgm.server.vo.ConditionVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,5 +23,20 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @param id
      * @return
      */
-    List<Role> listRolesByUserId(Integer id);
+    List<String> listRolesByUserId(Integer id);
+
+    /**
+     * 查询路由角色列表
+     * @return
+     */
+    List<ResourceRoleDTO> listResourceRoles();
+
+    /**
+     * 查询角色列表
+     * @param current
+     * @param size
+     * @param conditionVO
+     * @return
+     */
+    List<RoleDTO> listRoles(@Param("current") Long current, @Param("size") Long size, @Param("conditionVO") ConditionVO conditionVO);
 }

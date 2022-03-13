@@ -12,20 +12,108 @@
         <result column="update_time" property="updateTime" />
     </resultMap>
 
+    <resultMap id="RolePermissionMap" type="com.zgm.server.dto.ResourceRoleDTO">
+        <id column="id" property="id"/>
+        <result column="url" property="url"/>
+        <result column="request_method" property="requestMethod"/>
+        <collection property="roleList" ofType="java.lang.String">
+            <constructor>
+                <arg column="role_name"/>
+            </constructor>
+        </collection>
+    </resultMap>
+
+    <resultMap id="RoleMap" type="com.zgm.server.dto.RoleDTO">
+        <id column="id" property="id"/>
+        <result column="role_name" property="roleName"/>
+        <result column="role_label" property="roleLabel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="is_disable" property="isDisable"/>
+        <collection property="resourceIdList" ofType="java.lang.Integer">
+            <constructor>
+                <arg column="resource_id"/>
+            </constructor>
+        </collection>
+        <collection property="menuIdList" ofType="java.lang.Integer">
+            <constructor>
+                <arg column="menu_id"/>
+            </constructor>
+        </collection>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, role_name, role_label, is_disable, create_time, update_time
     </sql>
     <!-- 根据用户id查询角色 -->
-    <select id="listRolesByUserId" resultType="com.zgm.server.pojo.Role">
+<!--    <select id="listRolesByUserId" resultType="com.zgm.server.pojo.Role">-->
+<!--        SELECT-->
+<!--         r.id,-->
+<!--         r.role_name as roleName,-->
+<!--         r.role_label as roleLabel-->
+<!--        FROM-->
+<!--         t_role r,-->
+<!--         t_user_role ur-->
+<!--        WHERE-->
+<!--         r.id = ur.role_id-->
+<!--        AND ur.user_id = #{id}-->
+<!--    </select>-->
+    <!-- 根据用户id查询角色 -->
+    <select id="listRolesByUserId" resultType="java.lang.String">
         SELECT
-         r.role_name as roleName
+         r.role_name
         FROM
          t_role r,
          t_user_role ur
         WHERE
          r.id = ur.role_id
         AND ur.user_id = #{id}
+    </select>
+    <!-- 查询路由角色列表 -->
+    <select id="listResourceRoles" resultMap="RolePermissionMap">
+        SELECT
+         re.id,
+         url,
+         request_method,
+         role_name
+         FROM
+         t_resource re
+         LEFT JOIN t_resource_role rep on re.id = rep.resource_id
+         LEFT JOIN t_role r on rep.role_id = r.id
+         WHERE
+         parent_id is NOT NULL
+         AND is_anonymous = 0
+    </select>
+    <!-- 查询角色列表 -->
+    <select id="listRoles" resultMap="RoleMap">
+        SELECT
+        r.id,
+        role_name,
+        role_label,
+        r.create_time,
+        r.is_disable,
+        rr.resource_id,
+        rm.menu_id
+        FROM
+        (
+        SELECT
+        id,
+        role_name,
+        role_label,
+        create_time,
+        is_disable
+        FROM
+        t_role
+        <where>
+            <if test="conditionVO.keywords != null ">
+                role_name like concat('%',#{conditionVO.keywords},'%')
+            </if>
+        </where>
+        LIMIT #{current}, #{size}
+        ) r
+        LEFT JOIN t_resource_role rr ON r.id = rr.role_id
+        LEFT JOIN t_menu_role rm on r.id = rm.role_id
+        ORDER BY r.id
     </select>
 
 </mapper>
